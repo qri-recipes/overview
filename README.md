@@ -34,6 +34,8 @@ For merge to work, the schema of the dataset must specify at least one identifie
 
 Recipe maintainers should list which of these categories their recipe fits within.
 
+>TODO: update section to explain merge actions
+
 
 ## Recipes Naturally Interoperate
 
@@ -55,21 +57,38 @@ The list of public recipes is kept as a dataset at `qri/recipes`, which is a mir
 
 Recipe Project Organization
 
-Recipe bases should all draw on the same dataset template directory, which will be stored in the repo of each recipe.
+Recipe bases should all draw on the same dataset template directory, 
+which will be stored in the repo of each recipe.
 
 
     templates/
       - structure.json
       - schema.json
       - meta.json
-    params.yaml
+    recipe_config.env
     recipe.py
     dockerfile
     README.md
 
-the templates directory contains starting templates for recipe ingestion. recipe bases should/will check the templates directory for json files that
+the templates directory contains starting templates for recipe 
+ingestion. recipe bases should/will check the templates directory for 
+json files that qri will use to create datasets
 
-the dockerfile is a docker container file that will run the recipe with `docker run`
+the `recipe_config.env` file should contain a simple key-value listing
+of parameters that a recipe_user may want to change such as a 'target_url'
+or parameters such as the dataset name:
+```bash
+# `r_target_url` is the target url to fetch
+r_target_url="https://edg.epa.gov/data.json"
+# `r_data_file` is the name of the datafile that the recipe expects
+r_data_file="data.json"
+```
+These parameters will be read in as environment variables when the 
+docker container is initialized and will be available for use by 
+recipe scripts
+
+the dockerfile is a docker container file that will run the recipe 
+with `docker run --env-file=env_config.env`
 
 
 ## Configuration Via Environment Variables
